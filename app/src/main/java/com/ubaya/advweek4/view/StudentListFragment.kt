@@ -31,23 +31,19 @@ class StudentListFragment : Fragment() {
         recView.adapter = studentListAdapter
 
         observeViewModel()
+
+        refreshLayout.setOnRefreshListener {
+            recView.visibility = View.GONE
+            textError.visibility = View.GONE
+            progressLoad.visibility = View.VISIBLE
+            viewModel.refresh()
+            refreshLayout.isRefreshing = false
+        }
     }
 
     private fun observeViewModel() {
         viewModel.studentsLiveData.observe(viewLifecycleOwner) {
             studentListAdapter.updateStudentList(it)
-        }
-        viewModel.studentsLoadErrorLiveData.observe(viewLifecycleOwner) {
-            textError.visibility = if (it) View.VISIBLE else View.GONE
-        }
-        viewModel.loadingLiveData.observe(viewLifecycleOwner) {
-            if (it) { // sedang loading
-                recView.visibility = View.GONE
-                progressLoad.visibility = View.VISIBLE
-            } else {
-                recView.visibility = View.VISIBLE
-                progressLoad.visibility = View.GONE
-            }
         }
     }
 }
