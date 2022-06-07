@@ -45,5 +45,18 @@ class StudentListFragment : Fragment() {
         viewModel.studentsLiveData.observe(viewLifecycleOwner) {
             studentListAdapter.updateStudentList(it)
         }
+
+        viewModel.studentsLoadErrorLiveData.observe(viewLifecycleOwner) {
+            textError.visibility = if (it) View.VISIBLE else View.GONE
+        }
+        viewModel.loadingLiveData.observe(viewLifecycleOwner) {
+            if (it) { // sedang loading
+                recView.visibility = View.GONE
+                progressLoad.visibility = View.VISIBLE
+            } else {
+                recView.visibility = View.VISIBLE
+                progressLoad.visibility = View.GONE
+            }
+        }
     }
 }
